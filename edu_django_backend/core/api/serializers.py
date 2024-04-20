@@ -3,14 +3,14 @@ from rest_framework import serializers
 from ..models import User
 
 
-
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
 
         # Add custom claims
-        token['name'] = user.name      
+        token['first_name'] = user.first_name    
+        token['last_name'] = user.last_name    
         # ...
 
         return token
@@ -18,7 +18,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id','name','password','phone_number', 'email', 'first_name', 'last_name')
+        fields = ('id', 'email', 'password','phone_number', 'first_name', 'last_name')
         extra_kwargs = {
             'password': {
                 'write_only': True,
