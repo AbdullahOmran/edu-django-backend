@@ -21,12 +21,12 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('docs/', schema_view.with_ui('swagger', cache_timeout=0),name='schema-swagger-ui'),
-    path('auth/token/',MyTokenObtainPairView.as_view(), name = 'auth-token' ),
-    path('auth/refresh/',TokenRefreshView.as_view(), name = 'auth-refresh' ),
     path('auth/register/',Register.as_view(), name = 'auth-register' ),
+    path('auth/login/',MyTokenObtainPairView.as_view(), name = 'auth-login' ),
+    path('auth/refresh/',TokenRefreshView.as_view(), name = 'auth-refresh' ),
+    # path('auth/token/',MyTokenObtainPairView.as_view(), name = 'auth-token' ),
     # path('auth/logout/',TokenRefreshView.as_view(), name = 'token-refresh' ),
     # path('auth/forgot-password/',TokenRefreshView.as_view(), name = 'token-refresh' ),
     # path('auth/reset-password/',TokenRefreshView.as_view(), name = 'token-refresh' ),
     # path('auth/verify/',TokenRefreshView.as_view(), name = 'token-refresh' ),
-    # path('auth/login/',TokenRefreshView.as_view(), name = 'token-refresh' ),
 ]

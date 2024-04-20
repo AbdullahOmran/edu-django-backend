@@ -14,4 +14,4 @@ class Register(APIView):
         serializer = UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(serializer)
+        return Response(serializer.data)
