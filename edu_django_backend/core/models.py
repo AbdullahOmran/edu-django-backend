@@ -40,10 +40,10 @@ class User(AbstractUser):
     """
     username = None
     email = models.EmailField(_("email address"), unique=True)
-    phone_number = models.CharField(max_length=20,unique= True, help_text='Enter phone number')
+    phone_number = models.CharField(verbose_name=_("phone number"),max_length=20,unique= True, help_text='Enter phone number')
 
-    USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ['phone_number']
+    USERNAME_FIELD = "phone_number"
+    REQUIRED_FIELDS = ['email']
     objects = UserManager()
 
     def __str__(self):
