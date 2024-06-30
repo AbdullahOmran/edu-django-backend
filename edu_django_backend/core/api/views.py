@@ -11,7 +11,6 @@ class MyTokenObtainPairView(TokenObtainPairView):
 
 class Register(APIView):
 
-  
     def post(self, request, format=None):
         """
         Register a new user
