@@ -6,6 +6,26 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from .views import Register
+from .views import (
+    # ContentCreatorListCreateView, ContentCreatorDetailView,
+    # InstructorListCreateView, 
+    InstructorDetailView,
+    # CourseListCreateView, 
+    CourseDetailView,
+    # LessonListCreateView,
+     LessonDetailView,
+    # QuestionListCreateView, 
+    QuestionDetailView,
+    # QuestionOptionListCreateView, 
+    QuestionOptionDetailView,
+    ExamListCreateView, ExamDetailView,
+    # ExamQuestionListCreateView,
+    #  ExamQuestionDetailView,
+    # StudentListCreateView, StudentDetailView,
+    AnswerListCreateView,
+     AnswerDetailView,
+    # FeedbackListCreateView, FeedbackDetailView
+)
 schema_view = get_schema_view(
     openapi.Info(
         title="Edu API Documentation",
@@ -29,4 +49,26 @@ urlpatterns = [
     # path('auth/forgot-password/',TokenRefreshView.as_view(), name = 'token-refresh' ),
     # path('auth/reset-password/',TokenRefreshView.as_view(), name = 'token-refresh' ),
     # path('auth/verify/',TokenRefreshView.as_view(), name = 'token-refresh' ),
+    # path('contentcreators/', ContentCreatorListCreateView.as_view(), name='contentcreator-list-create'),
+    # path('contentcreators/<uuid:pk>/', ContentCreatorDetailView.as_view(), name='contentcreator-detail'),
+    # path('instructors/', InstructorListCreateView.as_view(), name='instructor-list-create'),
+    path('instructors/<uuid:pk>/', InstructorDetailView.as_view(), name='instructor-detail'),
+    # path('courses/', CourseListCreateView.as_view(), name='course-list-create'),
+    path('courses/<uuid:pk>/', CourseDetailView.as_view(), name='course-detail'),
+    # path('lessons/', LessonListCreateView.as_view(), name='lesson-list-create'),
+    path('lessons/<uuid:pk>/', LessonDetailView.as_view(), name='lesson-detail'),
+    # path('questions/', QuestionListCreateView.as_view(), name='question-list-create'),
+    path('questions/<uuid:pk>/', QuestionDetailView.as_view(), name='question-detail'),
+    # path('questionoptions/', QuestionOptionListCreateView.as_view(), name='questionoption-list-create'),
+    path('questionoptions/<uuid:pk>/', QuestionOptionDetailView.as_view(), name='questionoption-detail'),
+    path('exams/', ExamListCreateView.as_view(), name='exam-list-create'),
+    path('exams/<uuid:pk>/', ExamDetailView.as_view(), name='exam-detail'),
+    # path('examquestions/', ExamQuestionListCreateView.as_view(), name='examquestion-list-create'),
+    # path('examquestions/<uuid:pk>/', ExamQuestionDetailView.as_view(), name='examquestion-detail'),
+    # path('students/', StudentListCreateView.as_view(), name='student-list-create'),
+    # path('students/<uuid:pk>/', StudentDetailView.as_view(), name='student-detail'),
+    path('answers/', AnswerListCreateView.as_view(), name='answer-list-create'),
+    path('answers/<uuid:pk>/', AnswerDetailView.as_view(), name='answer-detail'),
+    # path('feedbacks/', FeedbackListCreateView.as_view(), name='feedback-list-create'),
+    # path('feedbacks/<uuid:pk>/', FeedbackDetailView.as_view(), name='feedback-detail'),
 ]
