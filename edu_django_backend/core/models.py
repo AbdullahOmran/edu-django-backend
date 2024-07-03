@@ -124,10 +124,11 @@ class Answer(models.Model):
     exam_id = models.ForeignKey(Exam, on_delete=models.CASCADE)
     question_id = models.ForeignKey(Question, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
+    answer = models.CharField(max_length=100, null=True)
 
 class Feedback(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    student_id = models.ForeignKey(Student, on_delete=models.CASCADE)
+    content_creator_id = models.ForeignKey(ContentCreator, on_delete=models.SET_NULL, null=True)
     question_id = models.ForeignKey(Question, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
     difficulty_level = models.CharField(max_length=50)
