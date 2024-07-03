@@ -2,6 +2,9 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager, PermissionsMixin
 from django.utils.translation import gettext_lazy as _
 import uuid
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.utils import timezone
 
 class UserManager(BaseUserManager):
 
@@ -45,12 +48,12 @@ class User(AbstractUser):
         ('content_creator', 'Content Creator'),
         ('parent', 'Parent/Guardian'),
     ]
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(primary_key=True,unique=True, default=uuid.uuid4, editable=False)
     username = None
     email = models.EmailField(_("email address"), unique=True)
     phone_number = models.CharField(verbose_name=_("phone number"),max_length=20,unique= True, help_text='Enter phone number')
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='student')
-    role_assigned_date = models.DateField(default=timezone.now)
+    role_assigned_date = models.DateTimeField(auto_now_add=True)
 
     USERNAME_FIELD = "phone_number"
     REQUIRED_FIELDS = ['email']
@@ -66,7 +69,7 @@ class ContentCreator(models.Model):
 
 class Instructor(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user = models.OneToOneField(User, on_delete=models.SET_NULL)
+    user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True)
     instructor_name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
@@ -80,18 +83,18 @@ class Course(models.Model):
 
 class Lesson(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    date = models.DateField(auto_now_add=True)
+    title = models.CharField(max_length=150)
+    data = models.TextField()
     course_id = models.ForeignKey(Course, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
 
 class Question(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     question_text = models.CharField(max_length=255)
-    options = models.CharField(max_length=500)
     correct_answer = models.CharField(max_length=100)
     difficulty_level = models.CharField(max_length=50)
     lesson_id = models.ForeignKey(Lesson, on_delete=models.CASCADE)
-    content_creator_id = models.ForeignKey(ContentCreator, on_delete=models.CASCADE)
+    content_creator_id = models.ForeignKey(ContentCreator, on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
 
 class QuestionOption(models.Model):
