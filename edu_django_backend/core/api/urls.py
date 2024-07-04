@@ -10,6 +10,7 @@ from .views import (
     # ContentCreatorListCreateView, ContentCreatorDetailView,
     # InstructorListCreateView, 
     # InstructorDetailView,
+    
     CourseListView, 
     CourseDetailView,
     # LessonListCreateView,
@@ -56,7 +57,7 @@ urlpatterns = [
     path('courses/', CourseListView.as_view(), name='course-list'),
     path('courses/<uuid:pk>/', CourseDetailView.as_view(), name='course-detail'),
     # path('lessons/', LessonListCreateView.as_view(), name='lesson-list-create'),
-    path('lessons/<uuid:pk>/', LessonDetailView.as_view(), name='lesson-detail'),
+    path('lesson/<uuid:pk>/', LessonDetailView.as_view(), name='lesson-detail'),
     # path('questions/', QuestionListCreateView.as_view(), name='question-list-create'),
     path('questions/<uuid:pk>/', QuestionDetailView.as_view(), name='question-detail'),
     # path('questionoptions/', QuestionOptionListCreateView.as_view(), name='questionoption-list-create'),

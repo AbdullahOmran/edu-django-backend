@@ -10,9 +10,10 @@ from ..models import (
     ContentCreator, Instructor, Course, Lesson, Question,
     QuestionOption, Exam, ExamQuestion, Student, Answer, Feedback
 )
+from .paginations import LessonPagination
 from .serializers import (
-    ContentCreatorSerializer, InstructorSerializer, CourseSerializer,
-    LessonSerializer, QuestionSerializer, QuestionOptionSerializer,
+    ContentCreatorSerializer, InstructorSerializer, CourseListSerializer,CourseDetailSerializer,
+    LessonListSerializer, QuestionSerializer, QuestionOptionSerializer,LessonDetailSerializer,
     ExamSerializer, ExamQuestionSerializer, StudentSerializer, AnswerSerializer,
     FeedbackSerializer
 )
@@ -69,30 +70,36 @@ class Register(APIView):
 #         return Instructor.objects.filter(user=self.request.user)
 
 class CourseListView(generics.ListAPIView):
-    serializer_class = CourseSerializer
+    serializer_class = CourseListSerializer
     permission_classes = [permissions.IsAuthenticated]
     queryset = Course.objects.all()
 
-class CourseDetailView(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = CourseSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get_queryset(self):
-        return Course.objects.filter(instructor_id__user=self.request.user)
-
-# class LessonListCreateView(generics.ListCreateAPIView):
-#     serializer_class = LessonSerializer
+class CourseDetailView(generics.RetrieveAPIView):
+#     serializer_class = CourseDetailSerializer
 #     permission_classes = [permissions.IsAuthenticated]
-
-#     def get_queryset(self):
-#         return Lesson.objects.filter(course_id__instructor_id__user=self.request.user)
-
-class LessonDetailView(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = LessonSerializer
+#     queryset = Course.objects.all()
     permission_classes = [permissions.IsAuthenticated]
 
-    def get_queryset(self):
-        return Lesson.objects.filter(course_id__instructor_id__user=self.request.user)
+    def get(self, request, pk):
+        course = Course.objects.get(pk=pk)
+        lessons = Lesson.objects.filter(course_id=course)
+        
+        paginator = LessonPagination()
+        paginated_lessons = paginator.paginate_queryset(lessons, request)
+        lesson_serializer = LessonListSerializer(paginated_lessons, many=True)
+        
+        course_serializer = CourseDetailSerializer(course)
+        response_data = course_serializer.data
+        response_data['lessons'] = paginator.get_paginated_response(lesson_serializer.data).data
+        
+        return Response(response_data)
+
+
+
+class LessonDetailView(generics.RetrieveAPIView):
+    serializer_class = LessonDetailSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = Lesson.objects.all()
 
 # class QuestionListCreateView(generics.ListCreateAPIView):
 #     serializer_class = QuestionSerializer

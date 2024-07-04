@@ -36,7 +36,16 @@ class UserSerializer(serializers.ModelSerializer):
             instance.save()
             return instance
 
+class LessonListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Lesson
+        fields = ['id', 'title', 'created_at']
 
+class LessonDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Lesson
+        fields = '__all__'
+        
 class ContentCreatorSerializer(serializers.ModelSerializer):
     class Meta:
         model = ContentCreator
@@ -45,18 +54,22 @@ class ContentCreatorSerializer(serializers.ModelSerializer):
 class InstructorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Instructor
-        fields = '__all__'
+        fields = ['instructor_name']
 
-class CourseSerializer(serializers.ModelSerializer):
+class CourseListSerializer(serializers.ModelSerializer):
     instructor = InstructorSerializer(source='instructor_id', read_only=True)
     class Meta:
         model = Course
-        fields = '__all__'
+        fields = ['id', 'instructor', 'course_name', 'description','created_at']
 
-class LessonSerializer(serializers.ModelSerializer):
+class CourseDetailSerializer(serializers.ModelSerializer):
+    instructor = InstructorSerializer(source='instructor_id', read_only=True)
+    lessons = LessonListSerializer(source='lesson_set', many=True, read_only=True)
     class Meta:
-        model = Lesson
-        fields = '__all__'
+        model = Course
+        fields = ['id', 'instructor', 'course_name', 'description','created_at','lessons']
+
+
 
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
