@@ -61,19 +61,17 @@ class Register(APIView):
 #     def perform_create(self, serializer):
 #         serializer.save(user=self.request.user)
 
-class InstructorDetailView(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = InstructorSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get_queryset(self):
-        return Instructor.objects.filter(user=self.request.user)
-
-# class CourseListCreateView(generics.ListCreateAPIView):
-#     serializer_class = CourseSerializer
+# class InstructorDetailView(generics.RetrieveAPIView):
+#     serializer_class = InstructorSerializer
 #     permission_classes = [permissions.IsAuthenticated]
 
 #     def get_queryset(self):
-#         return Course.objects.filter(instructor_id__user=self.request.user)
+#         return Instructor.objects.filter(user=self.request.user)
+
+class CourseListView(generics.ListAPIView):
+    serializer_class = CourseSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = Course.objects.all()
 
 class CourseDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = CourseSerializer

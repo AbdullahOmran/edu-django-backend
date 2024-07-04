@@ -69,7 +69,7 @@ class ContentCreator(models.Model):
 
 class Instructor(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True)
+    user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True, blank=True)
     instructor_name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
