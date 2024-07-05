@@ -72,6 +72,7 @@ class Instructor(models.Model):
     user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True, blank=True)
     instructor_name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
+    photo = models.ImageField(upload_to='media/instructors/photos/', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
 
 class Course(models.Model):
