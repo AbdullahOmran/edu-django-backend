@@ -9,15 +9,18 @@ from rest_framework import generics, permissions
 from django.shortcuts import get_object_or_404
 from ..models import (
     ContentCreator, Instructor, Course, Lesson, Question,
-    QuestionOption, Exam, ExamQuestion, Student, Answer, Feedback
+    QuestionOption, Exam, ExamQuestion, Student, Answer, Feedback,LessonNotes
 )
 from .paginations import LessonPagination
 from .serializers import (
     ContentCreatorSerializer, InstructorSerializer, CourseListSerializer,CourseDetailSerializer,
     LessonListSerializer, QuestionSerializer, QuestionOptionSerializer,LessonDetailSerializer,
     ExamSerializer, ExamQuestionSerializer, StudentSerializer, AnswerSerializer,
-    FeedbackSerializer
+    FeedbackSerializer, LessonNotesUpdateSerializer
 )
+from rest_framework.exceptions import PermissionDenied
+
+
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
@@ -108,6 +111,28 @@ class LessonDetailView(generics.RetrieveAPIView):
         student = get_object_or_404(Student, user=self.request.user)
         context['student'] = student
         return context
+class IsOwnerOrReadOnly(permissions.BasePermission):
+    """
+    Custom permission to only allow owners of an object to edit it.
+    """
+    def has_object_permission(self, request, view, obj):
+        # Write permissions are only allowed to the owner of the note.
+        return obj.student.user == request.user
+
+class LessonNotesUpdateView(generics.UpdateAPIView):
+    queryset = LessonNotes.objects.all()
+    serializer_class = LessonNotesUpdateSerializer
+    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
+
+    def get_queryset(self):
+        student = get_object_or_404(Student, user=self.request.user)
+        return LessonNotes.objects.filter(student=student)
+
+    def perform_update(self, serializer):
+        student = get_object_or_404(Student, user=self.request.user)
+        if serializer.instance.student != student:
+            raise PermissionDenied("You do not have permission to edit this note.")
+        serializer.save()
 
 # class QuestionListCreateView(generics.ListCreateAPIView):
 #     serializer_class = QuestionSerializer

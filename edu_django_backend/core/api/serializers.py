@@ -58,7 +58,7 @@ class LessonDetailSerializer(serializers.ModelSerializer):
             notes = obj.lesson_notes.filter(student=student)
         else:
             notes = obj.lesson_notes.all()
-        return LessonNotesSerializer(notes, many=True).data
+        return LessonNotesSerializer(notes, many=True,read_only=True).data
         
 class ContentCreatorSerializer(serializers.ModelSerializer):
     class Meta:
@@ -120,3 +120,8 @@ class FeedbackSerializer(serializers.ModelSerializer):
     class Meta:
         model = Feedback
         fields = '__all__'
+
+class LessonNotesUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LessonNotes
+        fields = ['note']
