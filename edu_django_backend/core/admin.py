@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import User
 from .models import (
     ContentCreator, Instructor, Course, Lesson, Question,
-    QuestionOption, Exam, ExamQuestion, Student, Answer, Feedback
+    QuestionOption, Exam, ExamQuestion, Student, Answer, Feedback,LessonNotes
 )
 
 
@@ -16,6 +16,10 @@ class ContentCreatorAdmin(admin.ModelAdmin):
 
 @admin.register(Instructor)
 class InstructorAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(LessonNotes)
+class LessonNotesAdmin(admin.ModelAdmin):
     pass
 
 @admin.register(Course)

@@ -2,7 +2,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
 from ..models import (
     User,ContentCreator, Instructor, Course, Lesson, Question,
-    QuestionOption, Exam, ExamQuestion, Student, Answer, Feedback
+    QuestionOption, Exam, ExamQuestion, Student, Answer, Feedback,LessonNotes
 )
 
 
@@ -41,7 +41,12 @@ class LessonListSerializer(serializers.ModelSerializer):
         model = Lesson
         fields = ['id', 'title', 'created_at']
 
+class LessonNotesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LessonNotes
+        fields = '__all__'
 class LessonDetailSerializer(serializers.ModelSerializer):
+    note = LessonNotesSerializer(source="lesson_id",many=True, read_only=True)
     class Meta:
         model = Lesson
         fields = '__all__'
@@ -51,10 +56,11 @@ class ContentCreatorSerializer(serializers.ModelSerializer):
         model = ContentCreator
         fields = '__all__'
 
+
 class InstructorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Instructor
-        fields = ['instructor_name']
+        fields = ['instructor_name', 'photo']
 
 class CourseListSerializer(serializers.ModelSerializer):
     instructor = InstructorSerializer(source='instructor_id', read_only=True)

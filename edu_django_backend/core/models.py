@@ -61,7 +61,10 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.email
-
+class Student(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    notes = models.ManyToManyField('Lesson',through='LessonNotes')
 class ContentCreator(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -86,8 +89,18 @@ class Lesson(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=150)
     data = models.TextField()
+    description = models.TextField(null=True)
+    photo = models.ImageField(upload_to='media/lessons/photos/', null=True, blank=True)
     course_id = models.ForeignKey(Course, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
+class LessonNotes(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    lesson= models.ForeignKey(Lesson, on_delete=models.CASCADE)
+    note = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True, editable=False)
+    student = models.ForeignKey(Student, on_delete=models.SET_NULL, null=True)
+    class Meta:
+        verbose_name_plural  = 'lesson notes'
 
 class Question(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -115,9 +128,7 @@ class ExamQuestion(models.Model):
     question_id = models.ForeignKey(Question, on_delete=models.CASCADE)
     exam_id = models.ForeignKey(Exam, on_delete=models.CASCADE)
 
-class Student(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
 
 class Answer(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
