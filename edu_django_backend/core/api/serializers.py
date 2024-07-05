@@ -46,7 +46,7 @@ class LessonNotesSerializer(serializers.ModelSerializer):
         model = LessonNotes
         fields = '__all__'
 class LessonDetailSerializer(serializers.ModelSerializer):
-    note = LessonNotesSerializer(source="lesson_id",many=True, read_only=True)
+    note = LessonNotesSerializer(source="lesson_notes", many=True)
     class Meta:
         model = Lesson
         fields = '__all__'
