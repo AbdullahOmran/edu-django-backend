@@ -66,6 +66,9 @@ class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     notes = models.ManyToManyField('Lesson',through='LessonNotes')
     
+    def __str__(self):
+        return self.user.email
+    
 class ContentCreator(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -94,6 +97,9 @@ class Lesson(models.Model):
     photo = models.ImageField(upload_to='media/lessons/photos/', null=True, blank=True)
     course_id = models.ForeignKey(Course, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
+
+    def __str__(self):
+        return self.title
     
 class LessonNotes(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -103,6 +109,9 @@ class LessonNotes(models.Model):
     student = models.ForeignKey(Student, on_delete=models.SET_NULL, null=True)
     class Meta:
         verbose_name_plural  = 'lesson notes'
+    
+    def __str__(self):
+        return f'Note by {self.student} on {self.lesson}'
 
 class Question(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

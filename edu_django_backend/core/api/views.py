@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework import generics, permissions
+from django.shortcuts import get_object_or_404
 from ..models import (
     ContentCreator, Instructor, Course, Lesson, Question,
     QuestionOption, Exam, ExamQuestion, Student, Answer, Feedback
@@ -100,6 +101,13 @@ class LessonDetailView(generics.RetrieveAPIView):
     serializer_class = LessonDetailSerializer
     permission_classes = [permissions.IsAuthenticated]
     queryset = Lesson.objects.all()
+
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        student = get_object_or_404(Student, user=self.request.user)
+        context['student'] = student
+        return context
 
 # class QuestionListCreateView(generics.ListCreateAPIView):
 #     serializer_class = QuestionSerializer

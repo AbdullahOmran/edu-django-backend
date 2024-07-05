@@ -46,10 +46,19 @@ class LessonNotesSerializer(serializers.ModelSerializer):
         model = LessonNotes
         fields = '__all__'
 class LessonDetailSerializer(serializers.ModelSerializer):
-    note = LessonNotesSerializer(source="lesson_notes", many=True)
+    lesson_notes = serializers.SerializerMethodField()
+
     class Meta:
         model = Lesson
         fields = '__all__'
+
+    def get_lesson_notes(self, obj):
+        student = self.context.get('student')
+        if student:
+            notes = obj.lesson_notes.filter(student=student)
+        else:
+            notes = obj.lesson_notes.all()
+        return LessonNotesSerializer(notes, many=True).data
         
 class ContentCreatorSerializer(serializers.ModelSerializer):
     class Meta:
