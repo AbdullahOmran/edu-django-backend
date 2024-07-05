@@ -56,6 +56,10 @@ class LessonDetailSerializer(serializers.ModelSerializer):
         student = self.context.get('student')
         if student:
             notes = obj.lesson_notes.filter(student=student)
+            if not notes.exists():
+                # Create a new note if none exists for this student and lesson
+                LessonNotes.objects.create(lesson=obj, student=student)
+                notes = obj.lesson_notes.filter(student=student)
         else:
             notes = obj.lesson_notes.all()
         return LessonNotesSerializer(notes, many=True,read_only=True).data
