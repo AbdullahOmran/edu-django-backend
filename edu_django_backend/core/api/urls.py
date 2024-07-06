@@ -1,6 +1,6 @@
 
 from .views import MyTokenObtainPairView
-from rest_framework_simplejwt.views import TokenRefreshView
+from rest_framework_simplejwt.views import TokenRefreshView,TokenVerifyView
 from django.urls import path,include
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
@@ -21,6 +21,7 @@ from .views import (
     # QuestionOptionListCreateView, 
     QuestionOptionDetailView,
     ExamListCreateView, ExamDetailView,
+    LoadUserView,
     # ExamQuestionListCreateView,
     #  ExamQuestionDetailView,
     # StudentListCreateView, StudentDetailView,
@@ -46,11 +47,12 @@ urlpatterns = [
     path('auth/register/',Register.as_view(), name = 'auth-register' ),
     path('auth/login/',MyTokenObtainPairView.as_view(), name = 'auth-login' ),
     path('auth/refresh/',TokenRefreshView.as_view(), name = 'auth-refresh' ),
+    path('auth/verify/',TokenVerifyView.as_view(), name = 'auth-verify' ),
+    path('auth/load-user/',LoadUserView.as_view(), name = 'auth-load-user' ),
     # path('auth/token/',MyTokenObtainPairView.as_view(), name = 'auth-token' ),
     # path('auth/logout/',TokenRefreshView.as_view(), name = 'token-refresh' ),
     # path('auth/forgot-password/',TokenRefreshView.as_view(), name = 'token-refresh' ),
     # path('auth/reset-password/',TokenRefreshView.as_view(), name = 'token-refresh' ),
-    # path('auth/verify/',TokenRefreshView.as_view(), name = 'token-refresh' ),
     # path('contentcreators/', ContentCreatorListCreateView.as_view(), name='contentcreator-list-create'),
     # path('contentcreators/<uuid:pk>/', ContentCreatorDetailView.as_view(), name='contentcreator-detail'),
     # path('instructors/', InstructorListCreateView.as_view(), name='instructor-list-create'),

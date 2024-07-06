@@ -5,6 +5,7 @@ import uuid
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import timezone
+from django.shortcuts import get_object_or_404
 
 
 class UserManager(BaseUserManager):
@@ -79,16 +80,23 @@ class Instructor(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True, blank=True)
     instructor_name = models.CharField(max_length=100)
-    email = models.EmailField(unique=True)
+    email = models.EmailField(unique=True, blank=True, null=True)
     photo = models.ImageField(upload_to='media/instructors/photos/', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
+
+    def __str__(self):
+        return self.instructor_name
 
 class Course(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     course_name = models.CharField(max_length=100)
-    description = models.TextField()
+    description = models.TextField(null=True, blank=True)
     instructor_id = models.ForeignKey(Instructor, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
+
+    def __str__(self):
+        instructor = get_object_or_404(Instructor, instructor_name=self.instructor_id)
+        return f'{self.course_name} By {instructor.instructor_name}'
 
 class Lesson(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

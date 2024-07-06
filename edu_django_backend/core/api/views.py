@@ -9,7 +9,7 @@ from rest_framework import generics, permissions
 from django.shortcuts import get_object_or_404
 from ..models import (
     ContentCreator, Instructor, Course, Lesson, Question,
-    QuestionOption, Exam, ExamQuestion, Student, Answer, Feedback,LessonNotes
+    QuestionOption, Exam, ExamQuestion, Student, Answer, Feedback,LessonNotes,User
 )
 from .paginations import LessonPagination
 from .serializers import (
@@ -36,6 +36,16 @@ class Register(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.errors,status=status.HTTP_201_CREATED)
+class LoadUserView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, format=None):
+        """
+        Load the authenticated user
+        """
+        user = get_object_or_404(User, id = self.request.user.id)
+        serializer = UserSerializer(user)
+        return Response(serializer.data,status=status.HTTP_200_OK)
 
 
 
