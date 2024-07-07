@@ -36,7 +36,7 @@ class Register(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.errors,status=status.HTTP_201_CREATED)
-class LoadUserView(APIView):
+class RetrieveUserView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, format=None):
