@@ -39,7 +39,7 @@ class UserSerializer(serializers.ModelSerializer):
 class LessonListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lesson
-        fields = ['id', 'title', 'created_at']
+        fields = ['id', 'title', 'photo', 'created_at']
 
 class LessonNotesSerializer(serializers.ModelSerializer):
     class Meta:

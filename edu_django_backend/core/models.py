@@ -81,7 +81,7 @@ class Instructor(models.Model):
     user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True, blank=True)
     instructor_name = models.CharField(max_length=100)
     email = models.EmailField(unique=True, blank=True, null=True)
-    photo = models.ImageField(upload_to='media/instructors/photos/', null=True, blank=True)
+    photo = models.ImageField(upload_to='instructors/photos/', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
 
     def __str__(self):
@@ -103,7 +103,7 @@ class Lesson(models.Model):
     title = models.CharField(max_length=150)
     data = models.TextField()
     description = models.TextField(null=True)
-    photo = models.ImageField(upload_to='media/lessons/photos/', null=True, blank=True)
+    photo = models.ImageField(upload_to='lessons/photos/', null=True, blank=True)
     course_id = models.ForeignKey(Course, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
 
