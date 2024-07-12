@@ -138,7 +138,6 @@ class QuestionOption(models.Model):
 
 class Exam(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    course_id = models.ForeignKey(Course, on_delete=models.CASCADE)
     exam_date = models.DateField()
     exam_type = models.CharField(max_length=50)
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
@@ -164,6 +163,34 @@ class Feedback(models.Model):
     question_id = models.ForeignKey(Question, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
     difficulty_level = models.CharField(max_length=50)
+
+class RandomExamManager(models.Manager):
+    def create_random_exam(self,exam_type, course_id, num_questions=10):
+        # Create a new exam
+        exam = self.create(
+            exam_date=timezone.now(),
+            exam_type=exam_type,
+            created_at=timezone.now()
+        )
+
+        # Get random questions for the course
+        questions = Question.objects.order_by('?')[:num_questions]
+
+        # Add questions to the exam
+        for question in questions:
+            ExamQuestion.objects.create(
+                exam_id=exam,
+                question_id=question
+            )
+
+        return exam
+
+class RandomExam(Exam):
+    objects = RandomExamManager()
+
+    class Meta:
+        proxy = True
+
 
 @receiver(post_save, sender=User)
 def create_student(sender, instance, created, **kwargs):
